@@ -72,6 +72,30 @@ add_action( 'rest_api_init', function () {
     ]);
 } );
 
+function delete_developer($request) {
+  if ( isset( $request['id'] ) ) {
+      $jsonPath = plugin_dir_url( __FILE__ ) . 'data.json';
+      $response = wp_remote_get($jsonPath);
+      $responseBody = wp_remote_retrieve_body( $response );
+      $jsonArray = json_decode( $responseBody , true);
+      array_splice($jsonArray['items'], $request['id'], 1);
+      $responseBody = json_encode($jsonArray);
+      $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
+      file_put_contents( $jsonPathDirPath,
+      $responseBody);
+      return 'ok';
+    } else {
+      return 'Invalid data sent';
+    }
+}
+
+add_action( 'rest_api_init', function () {
+    register_rest_route('manu/developers', 'delete-developer/', [
+            'methods' => 'POST',
+            'callback' => 'delete_developer',
+    ]);
+} );
+
 
 function myplugin_enqueue_style_admin() {
 
