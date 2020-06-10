@@ -1,14 +1,13 @@
 	<?php
 function manu_plugin_page() {
 
-	// check if user is allowed access
-	if ( ! current_user_can( 'manage_options' ) ) return;
-
 	?>
-
-	<div class="wrap">
-		<h1>Manu:Plugin</h1>
-	</div>
+  <div class="container">
+  <div class="row bg-light">
+    <div class="col-auto mr-auto"><p class="main-name text-dark align-middle">Striped Table</p></div>
+    <div class="col-auto"><p class="main-link-name text-danger align-middle">.table-striped</p></div>
+  </div>
+</div>
 
 	<?php
 }

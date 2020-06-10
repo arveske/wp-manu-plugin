@@ -60,6 +60,8 @@ function add_developer($request) {
       file_put_contents( $jsonPathDirPath,
       $responseBody);
       return 'ok';
+    } else {
+      return 'Invalid data sent';
     }
 }
 
@@ -69,3 +71,49 @@ add_action( 'rest_api_init', function () {
             'callback' => 'add_developer',
     ]);
 } );
+
+
+function myplugin_enqueue_style_admin() {
+
+	/*
+		wp_enqueue_style(
+			string           $handle,
+			string           $src = '',
+			array            $deps = array(),
+			string|bool|null $ver = false,
+			string           $media = 'all'
+		)
+	*/
+
+	$src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css';
+  $src1 = plugin_dir_url( __FILE__ ).'admin/css/style.css';
+
+	wp_enqueue_style( 'myplugin-admin', $src, array(), null, 'all' );
+  wp_enqueue_style( 'myplugin-admin1', $src1, array(), null, 'all' );
+}
+add_action( 'admin_enqueue_scripts', 'myplugin_enqueue_style_admin' );
+
+
+function myplugin_enqueue_script_admin() {
+
+	/*
+		wp_enqueue_script(
+			string           $handle,
+			string           $src = '',
+			array            $deps = array(),
+			string|bool|null $ver = false,
+			bool             $in_footer = false
+		)
+	*/
+
+	$src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js';
+  $src1 = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js';
+  $src2 = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js';
+
+	wp_enqueue_script( 'myplugin-admin', $src, array(), null, false );
+  wp_enqueue_script( 'myplugin-admin1', $src1, array(), null, false );
+  wp_enqueue_script( 'myplugin-admin2', $src1, array(), null, false );
+
+
+}
+add_action( 'admin_enqueue_scripts', 'myplugin_enqueue_script_admin' );
