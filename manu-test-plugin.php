@@ -24,7 +24,7 @@ function get_all_developers() {
   $jsonPath = plugin_dir_url( __FILE__ ) . '/data.json';
   $response = wp_remote_get($jsonPath);
   $responseBody = wp_remote_retrieve_body( $response );
-  $result = json_decode( $responseBody );
+  $result = json_decode( $responseBody, true );
   if ( is_array( $result ) && ! is_wp_error( $result ) ) {
       return $result;
   } else {
