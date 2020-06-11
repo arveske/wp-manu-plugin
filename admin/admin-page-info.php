@@ -23,7 +23,7 @@ Show table with data from JSON file
         </thead>
         <tbody>
 <?php
-    $jsonPath = get_home_url() . '/wp-content/plugins/manu-test-plugin/data.json';
+    $jsonPath = get_home_url() . '/index.php/wp-json/manu/developers/get-all';
     $deletUrl = get_home_url() . '/index.php/wp-json/manu/developers/delete-developer/';
     $editUrl = get_home_url() . '/index.php/wp-json/manu/developers/edit-developer/';
     $response = wp_remote_get($jsonPath);
