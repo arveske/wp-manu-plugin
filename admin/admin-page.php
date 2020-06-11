@@ -1,6 +1,6 @@
 <?php
 
-function myplugin_add_toplevel_menu() {
+function manu_plugin_to_admin_menu() {
 
 
 add_menu_page(
@@ -13,5 +13,6 @@ add_menu_page(
   null
 );
 
+
 }
-add_action( 'admin_menu', 'myplugin_add_toplevel_menu' );
+add_action( 'admin_menu', 'manu_plugin_to_admin_menu' );

@@ -20,11 +20,16 @@ if ( is_admin() ) {
 
 }
 
+/*
+  Get list of all developers as JSON file.
+  GET method
+*/
 function get_all_developers() {
   $jsonPath = plugin_dir_url( __FILE__ ) . '/data.json';
   $response = wp_remote_get($jsonPath);
   $responseBody = wp_remote_retrieve_body( $response );
   $result = json_decode( $responseBody, true );
+
   if ( is_array( $result ) && ! is_wp_error( $result ) ) {
       return $result;
   } else {
@@ -42,6 +47,11 @@ add_action( 'rest_api_init', function () {
 
     } );
 
+/*
+      Add new developer to JSON file.
+      POST method
+      Required data: name, position, stack
+*/
 function add_developer($request) {
   if ( isset( $request['name'] ) && isset( $request['position'] )
     && isset( $request['stack']) ) {
@@ -50,11 +60,14 @@ function add_developer($request) {
         'position' => $request['position'],
         'stack' => $request['stack']
       );
+
       $jsonPath = plugin_dir_url( __FILE__ ) . 'data.json';
       $response = wp_remote_get($jsonPath);
       $responseBody = wp_remote_retrieve_body( $response );
       $jsonArray = json_decode( $responseBody , true);
+
       array_push($jsonArray['items'], $postData);
+
       $responseBody = json_encode($jsonArray);
       $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
       file_put_contents( $jsonPathDirPath,
@@ -72,6 +85,11 @@ add_action( 'rest_api_init', function () {
     ]);
 } );
 
+/*
+      Edit existed developer in JSON file.
+      POST method
+      Required data: id, name, position, stack
+*/
 function edit_developer($request) {
   if ( isset( $request['id'] ) && isset( $request['name'] ) && isset( $request['position'] )
     && isset( $request['stack'])) {
@@ -79,9 +97,11 @@ function edit_developer($request) {
       $response = wp_remote_get($jsonPath);
       $responseBody = wp_remote_retrieve_body( $response );
       $jsonArray = json_decode( $responseBody , true);
+
       $jsonArray['items'][$request['id']]['name'] = $request['name'];
       $jsonArray['items'][$request['id']]['position'] = $request['position'];
       $jsonArray['items'][$request['id']]['stack'] = $request['stack'];
+
       $responseBody = json_encode($jsonArray);
       $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
       file_put_contents( $jsonPathDirPath,
@@ -99,6 +119,11 @@ add_action( 'rest_api_init', function () {
     ]);
 } );
 
+/*
+      Delete developer from JSON file
+      POST method
+      Required data: id
+*/
 function delete_developer($request) {
   if ( isset( $request['id'] ) ) {
       $jsonPath = plugin_dir_url( __FILE__ ) . 'data.json';
@@ -123,48 +148,16 @@ add_action( 'rest_api_init', function () {
     ]);
 } );
 
-
+/*
+      Add custom style css file to header of admin panel
+*/
 function myplugin_enqueue_style_admin() {
 
-	/*
-		wp_enqueue_style(
-			string           $handle,
-			string           $src = '',
-			array            $deps = array(),
-			string|bool|null $ver = false,
-			string           $media = 'all'
-		)
-	*/
+	$bootstrapSrc = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css';
+  $customStyles = plugin_dir_url( __FILE__ ).'admin/css/style.css';
 
-	$src = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css';
-  $src1 = plugin_dir_url( __FILE__ ).'admin/css/style.css';
-
-	wp_enqueue_style( 'myplugin-admin', $src, array(), null, 'all' );
-  wp_enqueue_style( 'myplugin-admin1', $src1, array(), null, 'all' );
+	wp_enqueue_style( 'myplugin-admin', $bootstrapSrc, array(), null, 'all' );
+  wp_enqueue_style( 'myplugin-admin1', $customStyles, array(), null, 'all' );
 }
+
 add_action( 'admin_enqueue_scripts', 'myplugin_enqueue_style_admin' );
-
-
-function myplugin_enqueue_script_admin() {
-
-	/*
-		wp_enqueue_script(
-			string           $handle,
-			string           $src = '',
-			array            $deps = array(),
-			string|bool|null $ver = false,
-			bool             $in_footer = false
-		)
-	*/
-
-	$src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js';
-  $src1 = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js';
-  $src2 = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js';
-
-	wp_enqueue_script( 'myplugin-admin', $src, array(), null, false );
-  wp_enqueue_script( 'myplugin-admin1', $src1, array(), null, false );
-  wp_enqueue_script( 'myplugin-admin2', $src1, array(), null, false );
-
-
-}
-add_action( 'admin_enqueue_scripts', 'myplugin_enqueue_script_admin' );
