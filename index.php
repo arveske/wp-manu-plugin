@@ -1,0 +1,1 @@
+<?php /* Silence lives here */ ?>
