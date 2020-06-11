@@ -5,7 +5,7 @@ function manu_plugin_to_admin_menu() {
 
 add_menu_page(
   'Manu Test',
-  'Manu:Plugin',
+  'Разработчики',
   'manage_options',
   'manu-test-plugin',
   'manu_plugin_page',
