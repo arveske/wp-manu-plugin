@@ -23,3 +23,7 @@ body {
 #wpwrap {
     background-color: #f4f5fa;
 }
+
+.table td {
+    vertical-align: inherit!important;
+}

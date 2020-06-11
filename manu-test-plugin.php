@@ -160,7 +160,7 @@ function delete_developer($request) {
       $response = wp_remote_get($jsonPath);
       $responseBody = wp_remote_retrieve_body( $response );
       $jsonArray = json_decode( $responseBody , true);
-
+			array_splice($jsonArray['items'], $request['id'], 1);
       $responseBody = json_encode($jsonArray);
       $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
       file_put_contents( $jsonPathDirPath,
