@@ -19,3 +19,7 @@ body {
 .container {
   background-color: ghostwhite;
 }
+
+#wpwrap {
+    background-color: #f4f5fa;
+}
