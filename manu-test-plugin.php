@@ -60,18 +60,48 @@ function add_developer($request) {
         'position' => $request['position'],
         'stack' => $request['stack']
       );
+      $responseBody = json_encode($postData);
+      $jsonPath = plugin_dir_path( __FILE__ ) . 'data.json';
 
-      $jsonPath = plugin_dir_url( __FILE__ ) . 'data.json';
-      $response = wp_remote_get($jsonPath);
-      $responseBody = wp_remote_retrieve_body( $response );
-      $jsonArray = json_decode( $responseBody , true);
+      $handle = fopen($jsonPath, 'r+');
+      $fstat = fstat($handle);
 
-      array_push($jsonArray['items'], $postData);
+      if ($fstat['size'] <= 13) {
+        /*
+          Add first developer
+        */
+        fseek($handle, -1, SEEK_END);
+        $char = fgetc($handle);
 
-      $responseBody = json_encode($jsonArray);
-      $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
-      file_put_contents( $jsonPathDirPath,
-      $responseBody);
+        if ($char == "\n") {
+          fseek($handle, -4, SEEK_END);
+        } else {
+          fseek($handle, -3, SEEK_END);
+        }
+
+        fwrite($handle, '[', 1);
+        fwrite($handle, $responseBody . ']}');
+        fclose($handle);
+
+      } else {
+        /*
+          Add one more developer
+        */
+        fseek($handle, -1, SEEK_END);
+        $char = fgetc($handle);
+
+        if ($char == "\n") {
+          fseek($handle, -3, SEEK_END);
+        } else {
+          fseek($handle, -2, SEEK_END);
+        }
+
+        fwrite($handle, ',', 1);
+        fwrite($handle, $responseBody . ']}');
+        fclose($handle);
+      }
+
+
       return 'ok';
     } else {
       return 'Invalid data sent';
@@ -105,7 +135,7 @@ function edit_developer($request) {
       $responseBody = json_encode($jsonArray);
       $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
       file_put_contents( $jsonPathDirPath,
-      $responseBody);
+      $responseBody, LOCK_EX);
       return 'ok';
     } else {
       return 'Invalid data sent';
@@ -134,7 +164,7 @@ function delete_developer($request) {
       $responseBody = json_encode($jsonArray);
       $jsonPathDirPath = plugin_dir_path( __FILE__ ) . 'data.json';
       file_put_contents( $jsonPathDirPath,
-      $responseBody);
+      $responseBody, LOCK_EX);
       return 'ok';
     } else {
       return 'Invalid data sent';

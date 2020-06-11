@@ -2,6 +2,7 @@ let idForDelete;
 let idForEdit;
 let delUrl;
 let editUrl;
+
 function deleteObject() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", delUrl, true);
@@ -16,6 +17,7 @@ function editObject() {
   let objName = document.getElementById("inputName").value;
   let objPosition = document.getElementById("inputPosition").value;
   let objStack = document.getElementById("inputStack").value;
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", editUrl, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
